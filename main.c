@@ -22,28 +22,34 @@ int main() {
                 if (dosHeader->e_magic == IMAGE_DOS_SIGNATURE) {
                     ntHeader = (PIMAGE_NT_HEADERS) ((u_char*)dosHeader + dosHeader->e_lfanew);
                     if (ntHeader->Signature == IMAGE_NT_SIGNATURE) {
-                        FILE *outF;
-                        outF = fopen("inf.txt", "w");
+                        FILE *outInf, *outCode;
+                        outInf = fopen("inf.txt", "w");
+                        outCode = fopen("code.bin", "wb");
 
                         DWORD addressEntryPoint = ntHeader->OptionalHeader.AddressOfEntryPoint;
-                        fprintf(outF, "%s%lu\n", "Address of entry point: ", addressEntryPoint);
+                        fprintf(outInf, "%s%lu\n", "Address of entry point: ", addressEntryPoint);
                         sectionHeader = IMAGE_FIRST_SECTION(ntHeader);
 //                        DWORD firstSection = dosHeader->e_lfanew + ntHeader->FileHeader.SizeOfOptionalHeader + sizeof(IMAGE_FILE_HEADER) + sizeof(DWORD);
                         for (int i = 0; i < ntHeader->FileHeader.NumberOfSections; i++, sectionHeader++) {
-                            fprintf(outF, "%s%d\n", "Section", i + 1);
-                            fprintf(outF, "%s%s\n", "Name: ",sectionHeader->Name);
-                            fprintf(outF, "%s%lu\n", "Virtual Address: ", sectionHeader->VirtualAddress);
-                            fprintf(outF, "%s%lu\n", "Raw Size: ", sectionHeader->SizeOfRawData);
-                            fprintf(outF, "%s%lu\n", "Virtual Size: ", sectionHeader->Misc.VirtualSize);
-                            fprintf(outF, "%s%lu\n", "Physical Address: ", sectionHeader->Misc.PhysicalAddress);
-                            fprintf(outF, "%s%hu\n", "Number of line numbers: ", sectionHeader->NumberOfLinenumbers);
-                            fprintf(outF, "%s%hu\n", "Number of relocations: ", sectionHeader->NumberOfRelocations);
-                            fprintf(outF, "%s%lu\n", "Pointer to line numbers: ", sectionHeader->PointerToLinenumbers);
-                            fprintf(outF, "%s%lu\n", "Number to relocations: ", sectionHeader->PointerToRelocations);
-                            fprintf(outF, "%s%lu\n", "Number to raw data: ", sectionHeader->PointerToRawData);
-                            fprintf(outF, "%s%lu\n\n", "Characteristics: ", sectionHeader->Characteristics);
+                            fprintf(outInf, "%s%d\n", "Section", i + 1);
+                            fprintf(outInf, "%s%s\n", "Name: ", sectionHeader->Name);
+                            fprintf(outInf, "%s%lu\n", "Virtual Address: ", sectionHeader->VirtualAddress);
+                            fprintf(outInf, "%s%lu\n", "Raw Size: ", sectionHeader->SizeOfRawData);
+                            fprintf(outInf, "%s%lu\n", "Virtual Size: ", sectionHeader->Misc.VirtualSize);
+                            fprintf(outInf, "%s%lu\n", "Physical Address: ", sectionHeader->Misc.PhysicalAddress);
+                            fprintf(outInf, "%s%hu\n", "Number of line numbers: ", sectionHeader->NumberOfLinenumbers);
+                            fprintf(outInf, "%s%hu\n", "Number of relocations: ", sectionHeader->NumberOfRelocations);
+                            fprintf(outInf, "%s%lu\n", "Pointer to line numbers: ", sectionHeader->PointerToLinenumbers);
+                            fprintf(outInf, "%s%lu\n", "Number to relocations: ", sectionHeader->PointerToRelocations);
+                            fprintf(outInf, "%s%lu\n", "Number to raw data: ", sectionHeader->PointerToRawData);
+                            fprintf(outInf, "%s%lu\n\n", "Characteristics: ", sectionHeader->Characteristics);
+
+                            if (sectionHeader->Characteristics & IMAGE_SCN_CNT_CODE){
+                                fprintf(outCode, "%s%d\n", "Section", i + 1); //use PointerToRawData
+                            }
                         }
-                        fclose(outF);
+                        fclose(outInf);
+                        fclose(outCode);
                     }
                 }
             }
