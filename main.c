@@ -41,7 +41,7 @@ int main() {
                     int seekLast = ftell(fileReader);
                     fseek(fileReader, currentSection.PointerToRawData, SEEK_SET);
                     for (DWORD j = 0; j < currentSection.SizeOfRawData; j++)
-                        fprintf(outCode, "%X ", getc(fileReader));
+                        fprintf(outCode, "%X ", fgetc(fileReader));
                     fseek(fileReader, seekLast, SEEK_SET);
                 }
             }
