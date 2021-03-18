@@ -34,7 +34,7 @@ int main() {
                 fprintf(outInf, "%s%lu\n", "Pointer to line numbers: ", currentSection.PointerToLinenumbers);
                 fprintf(outInf, "%s%lu\n", "Number to relocations: ", currentSection.PointerToRelocations);
                 fprintf(outInf, "%s%lu\n", "Number to raw data: ", currentSection.PointerToRawData);
-                fprintf(outInf, "%s%lu\n\n", "Characteristics: ", currentSection.Characteristics);
+                fprintf(outInf, "%s%lX\n\n", "Characteristics: 0x", currentSection.Characteristics);
 
                 if (currentSection.Characteristics & IMAGE_SCN_CNT_CODE) {
                     fprintf(outCode, "%s%d\n", "Section", i + 1); //use PointerToRawData
