@@ -12,15 +12,16 @@ int main() {
         if (dosHeader.e_magic != IMAGE_DOS_SIGNATURE) {
             printf("Image Dos Signature is incorrect!");
         } else {
+            FILE *outInf, *outCode;
+            outInf = fopen("inf.txt", "w");
+            outCode = fopen("code.bin", "wb");
+
             fseek(fileReader, dosHeader.e_lfanew, SEEK_SET);
             IMAGE_NT_HEADERS ntHeaders;
             fread(&ntHeaders, sizeof(IMAGE_NT_HEADERS), 1, fileReader);
             WORD addressEntryPoint = ntHeaders.OptionalHeader.AddressOfEntryPoint;
-            IMAGE_SECTION_HEADER currentSection;
-            FILE *outInf, *outCode;
-            outInf = fopen("inf.txt", "w");
-            outCode = fopen("code.bin", "wb");
             fprintf(outInf, "%s%hu\n", "Address of entry point: ", addressEntryPoint);
+            IMAGE_SECTION_HEADER currentSection;
             for (int i = 0; i < ntHeaders.FileHeader.NumberOfSections; i++) {
                 fread(&currentSection, sizeof(IMAGE_SECTION_HEADER), 1, fileReader);
                 fprintf(outInf, "%s%d\n", "Section", i + 1);
@@ -37,11 +38,16 @@ int main() {
                 fprintf(outInf, "%s%lX\n\n", "Characteristics: 0x", currentSection.Characteristics);
 
                 if (currentSection.Characteristics & IMAGE_SCN_CNT_CODE) {
-                    fprintf(outCode, "%s%d\n", "Section", i + 1); //use PointerToRawData
+                    int seekLast = ftell(fileReader);
+                    fseek(fileReader, currentSection.PointerToRawData, SEEK_SET);
+                    for (DWORD j = 0; j < currentSection.SizeOfRawData; j++)
+                        fprintf(outCode, "%X ", getc(fileReader));
+                    fseek(fileReader, seekLast, SEEK_SET);
                 }
             }
             fclose(outInf);
             fclose(outCode);
+            fclose(fileReader);
         }
     }
 }
