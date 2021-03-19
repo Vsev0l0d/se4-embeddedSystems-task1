@@ -20,21 +20,21 @@ int main() {
             IMAGE_NT_HEADERS ntHeaders;
             fread(&ntHeaders, sizeof(IMAGE_NT_HEADERS), 1, fileReader);
             WORD addressEntryPoint = ntHeaders.OptionalHeader.AddressOfEntryPoint;
-            fprintf(outInf, "%s%hu\n", "Address of entry point: ", addressEntryPoint);
+            fprintf(outInf, "%s%hX\n", "Address of entry point: 0x", addressEntryPoint);
             IMAGE_SECTION_HEADER currentSection;
             for (int i = 0; i < ntHeaders.FileHeader.NumberOfSections; i++) {
                 fread(&currentSection, sizeof(IMAGE_SECTION_HEADER), 1, fileReader);
                 fprintf(outInf, "%s%d\n", "Section", i + 1);
                 fprintf(outInf, "%s%s\n", "Name: ", currentSection.Name);
-                fprintf(outInf, "%s%lu\n", "Virtual Address: ", currentSection.VirtualAddress);
-                fprintf(outInf, "%s%lu\n", "Raw Size: ", currentSection.SizeOfRawData);
-                fprintf(outInf, "%s%lu\n", "Virtual Size: ", currentSection.Misc.VirtualSize);
-                fprintf(outInf, "%s%lu\n", "Physical Address: ", currentSection.Misc.PhysicalAddress);
-                fprintf(outInf, "%s%hu\n", "Number of line numbers: ", currentSection.NumberOfLinenumbers);
-                fprintf(outInf, "%s%hu\n", "Number of relocations: ", currentSection.NumberOfRelocations);
-                fprintf(outInf, "%s%lu\n", "Pointer to line numbers: ", currentSection.PointerToLinenumbers);
-                fprintf(outInf, "%s%lu\n", "Number to relocations: ", currentSection.PointerToRelocations);
-                fprintf(outInf, "%s%lu\n", "Number to raw data: ", currentSection.PointerToRawData);
+                fprintf(outInf, "%s%lX\n", "Virtual Address: 0x", currentSection.VirtualAddress);
+                fprintf(outInf, "%s%lX\n", "Raw Size: 0x", currentSection.SizeOfRawData);
+                fprintf(outInf, "%s%lX\n", "Virtual Size: 0x", currentSection.Misc.VirtualSize);
+                fprintf(outInf, "%s%lX\n", "Physical Address: 0x", currentSection.Misc.PhysicalAddress);
+                fprintf(outInf, "%s%hX\n", "Number of line numbers: 0x", currentSection.NumberOfLinenumbers);
+                fprintf(outInf, "%s%hX\n", "Number of relocations: 0x", currentSection.NumberOfRelocations);
+                fprintf(outInf, "%s%lX\n", "Pointer to line numbers: 0x", currentSection.PointerToLinenumbers);
+                fprintf(outInf, "%s%lX\n", "Number to relocations: 0x", currentSection.PointerToRelocations);
+                fprintf(outInf, "%s%lX\n", "Number to raw data: 0x", currentSection.PointerToRawData);
                 fprintf(outInf, "%s%lX\n\n", "Characteristics: 0x", currentSection.Characteristics);
 
                 if (currentSection.Characteristics & IMAGE_SCN_CNT_CODE) {
