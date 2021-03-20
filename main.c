@@ -40,8 +40,9 @@ int main() {
                 if (currentSection.Characteristics & IMAGE_SCN_CNT_CODE) {
                     int seekLast = ftell(fileReader);
                     fseek(fileReader, currentSection.PointerToRawData, SEEK_SET);
-                    for (DWORD j = 0; j < currentSection.SizeOfRawData; j++)
-                        fprintf(outCode, "%X ", fgetc(fileReader));
+                    char buff[currentSection.SizeOfRawData];
+                    fread(buff, sizeof(char), currentSection.SizeOfRawData, fileReader);
+                    fwrite(buff, sizeof(char), currentSection.SizeOfRawData, outCode);
                     fseek(fileReader, seekLast, SEEK_SET);
                 }
             }
