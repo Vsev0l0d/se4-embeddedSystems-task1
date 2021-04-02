@@ -3,9 +3,9 @@
 #include <windows.h>
 
 int main() {
-    FILE* fileReader = fopen("se4_embeddedSystems_task1.exe", "rb");
+    FILE* fileReader = fopen("se4-embeddedSystems-task1.exe", "rb");
     if (fileReader == NULL) {
-        printf("Cannot open file se4_embeddedSystems_task1.exe");
+        printf("Cannot open file se4-embeddedSystems-task1.exe");
     } else {
         IMAGE_DOS_HEADER dosHeader;
         fread(&dosHeader, sizeof (IMAGE_DOS_HEADER), 1, fileReader);
